@@ -1,0 +1,5 @@
+{
+  "name": "sdd-evaluation",
+  "description": "Antigravity plugin for evaluating Software Design Documents (SDDs) against engineering standards.",
+  "version": "1.0.0"
+}
