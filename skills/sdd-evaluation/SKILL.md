@@ -7,10 +7,31 @@ description: >-
   review, when judging hackathon design documents, or when a team wants to
   self-assess their design before implementation. Also use when asked to review,
   score, grade, or evaluate any design document, technical spec, or architecture
-  proposal.
+  proposal. Accepts Google Docs URLs, local Markdown/text files, or pasted
+  content as input.
 ---
 
 # SDD Evaluation
+
+## How to Invoke
+
+Users can trigger this skill by:
+
+- **Slash command:** `/sdd-evaluate` (Antigravity, Gemini CLI, Claude Code)
+- **Natural language:** "Evaluate my SDD", "Score this design doc", "Grade my architecture proposal", "Review the design document at [URL/path]"
+- **Auto-activation keywords:** The skill auto-activates when the agent sees any combination of ("evaluate", "score", "grade", "review", "assess") + ("SDD", "design doc", "design document", "architecture proposal", "technical spec")
+
+**Input:** The user provides the SDD as one of:
+
+| Input Type | Example | How to Read |
+|---|---|---|
+| Google Docs URL | `https://docs.google.com/document/d/1a2b3c/edit` | `docs.getText({ documentId: "<url>" })` — see `references/gdocs-integration.md` |
+| Google Doc name | "the Project Alpha design doc" | `drive.search` → `docs.getText` — see `references/gdocs-integration.md` |
+| Local file path | `docs/sdd.md` or `./design.md` | Read the file from the workspace |
+| Pasted content | (user pastes the full document) | Use the pasted text directly |
+
+If the user says "evaluate my SDD" without providing a source, ask:
+> "Where is your SDD? You can share a Google Docs link, a file path in your repo, or paste the content directly."
 
 ## Overview
 
@@ -35,19 +56,34 @@ This skill is designed for two audiences:
 The evaluation has four phases. Complete each phase fully before advancing.
 
 ```
-INTAKE ──→ STRUCTURAL SCAN ──→ DEEP ANALYSIS ──→ VERDICT
-  │              │                    │               │
-  ▼              ▼                    ▼               ▼
-Identify       Check for           Score each       Produce
-the doc &      missing             dimension        the final
-its context    sections            1–5              report
+ACQUIRE ──→ INTAKE ──→ STRUCTURAL SCAN ──→ DEEP ANALYSIS ──→ VERDICT
+  │            │              │                    │               │
+  ▼            ▼              ▼                    ▼               ▼
+Get the      Identify       Check for           Score each       Produce
+document     context        missing             dimension        the final
+             & audience     sections            1–5              report
 ```
+
+### Phase 0: Document Acquisition
+
+Get the full document content before anything else.
+
+1. **Determine the source.** Check what the user provided — a Google Docs URL, a document name to search, a local file path, or pasted text.
+2. **Read the document.**
+   - **Google Docs:** Use the Google Workspace MCP tools. See `references/gdocs-integration.md` for the exact workflow (URL handling, search, multi-tab docs). All workspace tools accept URLs directly — do not manually extract document IDs.
+   - **Local Markdown:** Read the file from the workspace. Parse `mermaid` fenced code blocks as architecture diagrams. Resolve `![alt](path)` image references and view images when possible.
+   - **Pasted content:** Use it directly.
+3. **Handle images and diagrams.**
+   - **Mermaid code blocks** in Markdown count as architecture diagrams. Evaluate their content for Dimension 2 (Architecture & Design) and Dimension 6 (Clarity & Communication).
+   - **Embedded images in Google Docs** can't be extracted as binary via `docs.getText`. Note their presence from context, credit the author for including visual aids, and ask the user to describe critical diagrams if their content is ambiguous.
+   - **Inline images in Markdown** (`![diagram](path)`) — resolve and view the image file. Factor it into the architecture and clarity scores.
+4. **Verify completeness.** Confirm you have the full document — not a summary, partial draft, or truncated paste. If the document is split across multiple files or tabs, gather all parts.
 
 ### Phase 1: Intake
 
 Establish context before evaluating.
 
-1. **Identify the document.** Confirm you have the full document — not a summary, not a partial draft. If the document is split across multiple files, gather all parts.
+1. **Identify the document.** Confirm the title, author, and any metadata present.
 2. **Identify the context.** What is this document for? A hackathon project? A production system? A proof of concept? Context calibrates expectations — a hackathon SDD won't have the same depth as a production system design.
 3. **Identify the audience.** Who will read this document? Engineers implementing it? Executives approving budget? Other teams integrating with it? This affects what "complete" means.
 4. **Surface your assumptions.** Before proceeding, list any assumptions you're making about scope, maturity, or constraints.
@@ -55,8 +91,10 @@ Establish context before evaluating.
 ```
 INTAKE SUMMARY:
 - Document: [title/filename]
+- Source: [Google Docs / local file / pasted]
 - Context: [hackathon / production / PoC / migration]
 - Audience: [implementing team / reviewers / leadership]
+- Diagrams found: [yes — N diagrams / no]
 - Assumptions: [list]
 → Proceeding with evaluation. Correct me if any of the above is wrong.
 ```
@@ -76,6 +114,7 @@ STRUCTURAL SCAN:
 ✅ Present: [list of sections found]
 ❌ Missing: [list of sections absent]
 ⚠️  Placeholder: [list of sections with TBD/TODO content]
+📊 Diagrams: [list of diagrams found — mermaid blocks, embedded images, etc.]
 📋 Coherence: [assessment of document flow]
 ```
 
@@ -85,18 +124,19 @@ Score the document across the six dimensions defined in `references/sdd-rubric.m
 
 1. **Read the rubric.** Load `references/sdd-rubric.md` and apply the specific indicators for each score level.
 2. **Cite evidence.** Every score must reference the specific section(s) of the document that justify it. "The Architecture section scores 3/5 because it describes components but lacks a data flow diagram and doesn't address failure modes" — not "Architecture seems adequate."
-3. **Provide suggestions.** For any dimension scoring below 4, provide specific, actionable suggestions for improvement. What would the author need to add, change, or clarify to raise the score?
+3. **Factor in diagrams.** Mermaid diagrams, embedded images, and architecture visuals contribute to Dimension 2 (Architecture & Design) and Dimension 6 (Clarity & Communication). Their absence is a finding.
+4. **Provide suggestions.** For any dimension scoring below 4, provide specific, actionable suggestions for improvement. What would the author need to add, change, or clarify to raise the score?
 
 **The six dimensions:**
 
 | # | Dimension | Weight | What It Measures |
 |---|-----------|--------|-----------------|
 | 1 | Problem Definition | 20% | Clarity of the problem, user impact, success criteria |
-| 2 | Architecture & Design | 25% | Solution structure, component design, data flow, trade-offs |
+| 2 | Architecture & Design | 25% | Solution structure, component design, data flow, trade-offs, **diagrams** |
 | 3 | Non-Functional Requirements | 20% | Security, scalability, reliability, performance, cost |
 | 4 | Risk Analysis | 15% | Identified risks, mitigations, dependencies, unknowns |
 | 5 | Feasibility & Planning | 10% | Implementation plan, timeline, resource needs, milestones |
-| 6 | Clarity & Communication | 10% | Writing quality, diagrams, consistent terminology |
+| 6 | Clarity & Communication | 10% | Writing quality, **diagrams**, consistent terminology |
 
 ### Phase 4: Verdict
 
@@ -105,6 +145,8 @@ Produce the final evaluation as a JSON object matching this structure:
 ```json
 {
   "summary": "2-3 sentence overall assessment",
+  "source": "Google Docs URL / local file path / pasted content",
+  "context": "hackathon / production / PoC",
   "dimensions": [
     {
       "name": "Problem Definition",
@@ -122,7 +164,12 @@ Produce the final evaluation as a JSON object matching this structure:
     "Include an architecture diagram showing data flows"
   ],
   "red_flags": ["No alternatives considered for database choice"],
-  "missing_sections": ["Risk Register", "Data Model"]
+  "missing_sections": ["Risk Register", "Data Model"],
+  "diagrams_found": ["1 Mermaid flowchart in Architecture section"],
+  "whats_done_well": [
+    "Problem statement is crisp with quantified user impact",
+    "Clear implementation phases with dependencies mapped"
+  ]
 }
 ```
 
@@ -165,6 +212,7 @@ Produce the final evaluation as a JSON object matching this structure:
 
 Before submitting your evaluation:
 
+- [ ] Document was fully acquired and read (not truncated or partial)
 - [ ] All six dimensions have been scored with cited evidence
 - [ ] Every score below 4 has at least one specific improvement suggestion
 - [ ] The verdict matches the weighted score threshold
@@ -173,3 +221,4 @@ Before submitting your evaluation:
 - [ ] The improvement roadmap is ordered by impact, not by section order
 - [ ] The report uses the structured template from Phase 4
 - [ ] No placeholder or TODO content remains in the evaluation
+- [ ] Diagrams (Mermaid, images) were factored into Architecture & Clarity scores

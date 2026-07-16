@@ -1,5 +1,5 @@
 {
   "name": "sdd-evaluation",
-  "description": "Antigravity plugin for evaluating Software Design Documents (SDDs) against engineering standards.",
-  "version": "1.0.0"
+  "description": "Evaluates Software Design Documents (SDDs) from Google Docs or local Markdown files against a 6-dimension rubric with scored verdicts. Cross-platform: works with Antigravity, Gemini CLI, and Claude Code.",
+  "version": "2.0.0"
 }

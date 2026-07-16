@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "google-workspace": {
+      "comment": "Required for reading Google Docs and searching Drive. Install the workspace extension: gemini extensions install https://github.com/gemini-cli-extensions/workspace — see README for per-platform setup."
+    }
+  }
+}
