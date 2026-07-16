@@ -11,13 +11,13 @@ These rules apply whenever the `sdd-evaluation` skill is active.
 
 ## Document Acquisition
 
-- **Ask before guessing the source.** If the user says "evaluate my SDD" but doesn't provide a file path, Google Docs URL, document name, or pasted content — ask. Do not assume the document is already in context.
-- **Accept any source format.** The user may provide: a Google Docs URL, a Google Doc title to search for, a local file path (`.md`, `.txt`, `.pdf`), or paste the content directly. Handle all of them.
+- **Ask before guessing the source.** If the user says "evaluate my SDD" but doesn't provide a file path or pasted content — ask. Do not assume the document is already in context.
+- **Accept any source format.** The user may provide a local file path (`.md`, `.txt`, `.pdf`) or paste the content directly. Handle both.
 - **Verify completeness.** Before starting evaluation, confirm you have the full document — not a summary, partial draft, or truncated paste.
 
 ## Diagram and Image Handling
 
-- **Treat diagrams as evidence.** Mermaid code blocks in Markdown and embedded images in Google Docs count as architecture diagrams for Dimension 2 and Dimension 6 scoring.
+- **Treat diagrams as evidence.** Mermaid code blocks and inline images in Markdown count as architecture diagrams for Dimension 2 and Dimension 6 scoring.
 - **Describe what you observe.** When evaluating images or diagrams, describe what they depict and how they contribute to (or contradict) the text. Do not ignore visual content.
 - **Missing diagrams are findings.** If the Architecture section has no diagrams of any kind, note it as a gap.
 

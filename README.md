@@ -4,7 +4,7 @@ Evaluate Software Design Documents against a **6-dimension rubric** with scored 
 
 Works with **Antigravity**, **Gemini CLI**, and **Claude Code**.
 
-Accepts SDDs from **Google Docs**, **local Markdown files**, or **pasted content**.
+Accepts SDDs from **local Markdown files** or **pasted content**.
 
 ---
 
@@ -69,12 +69,6 @@ mkdir -p .agents/plugins
 git clone https://github.com/pauldatta/sdd-evaluation-plugin.git .agents/plugins/sdd-evaluation-plugin
 ```
 
-**For Google Docs support**, install the Google Workspace extension:
-
-```bash
-gemini extensions install https://github.com/gemini-cli-extensions/workspace
-```
-
 ### Claude Code
 
 Claude Code reads skills from `.agents/` directories.
@@ -94,21 +88,6 @@ git clone https://github.com/pauldatta/sdd-evaluation-plugin.git ~/.claude/plugi
 
 > **Note:** If Claude Code doesn't auto-discover from `~/.claude/plugins/`, add the skill path to your `.claude/settings.json` under the `skills` key.
 
-**For Google Docs support in Claude Code**, add the Google Workspace MCP server to your `.claude/settings.json`:
-
-```json
-{
-  "mcpServers": {
-    "google-workspace": {
-      "command": "npx",
-      "args": ["-y", "@anthropic/google-workspace-mcp"]
-    }
-  }
-}
-```
-
-Or use any Google Docs MCP server that exposes `docs.getText` and `drive.search` tools.
-
 ---
 
 ## Quick Start
@@ -123,8 +102,6 @@ Once installed, trigger the evaluation with a slash command or natural language.
 
 The agent will ask where your SDD is. Provide one of:
 
-- A **Google Docs URL**: `https://docs.google.com/document/d/1a2b3c4d/edit`
-- A **doc name** to search: "the Project Alpha design doc"
 - A **file path**: `docs/sdd.md`
 - Or just **paste** the content directly
 
@@ -132,31 +109,15 @@ The agent will ask where your SDD is. Provide one of:
 
 Ask your coding assistant directly:
 
-> "Evaluate my SDD at https://docs.google.com/document/d/1a2b3c4d/edit"
-
 > "Score the design document in docs/architecture.md"
 
-> "Grade my hackathon design doc — it's called 'Team Rocket SDD' in Google Drive"
+> "Grade my hackathon design doc"
 
 > "Review this design doc:" *(then paste the content)*
 
 ---
 
 ## Source Types
-
-### Google Docs
-
-The agent uses the Google Workspace MCP tools to read your document:
-
-- **URL**: Pass the full Google Docs URL — the tools accept URLs directly (no manual ID extraction needed)
-- **Search by name**: The agent searches Google Drive for documents matching your description
-- **Multi-tab docs**: All tabs are read and concatenated for evaluation
-- **Images**: Embedded images (architecture diagrams, flowcharts) are noted from context. The agent credits the author for including visual aids and evaluates their contribution to architecture and clarity scores
-- **Comments & suggestions**: Reviewer comments provide context; suggested edits are not evaluated as accepted content
-
-**Prerequisite:** The Google Workspace extension must be installed (see Installation above).
-
-**Fallback:** If the workspace MCP isn't available, export the Google Doc as Markdown (**File → Download → Markdown**) and provide the local file path instead.
 
 ### Local Markdown
 
@@ -179,15 +140,13 @@ Paste the full SDD content directly into the chat. The agent evaluates it as-is.
 ```
 sdd-evaluation-plugin/
 ├── plugin.json                          # Plugin manifest
-├── mcp_config.json                      # MCP server dependencies (Google Workspace)
 ├── README.md                            # This file
 ├── skills/
 │   └── sdd-evaluation/
 │       ├── SKILL.md                     # Evaluation workflow & agent instructions
 │       └── references/
 │           ├── sdd-rubric.md            # 6-dimension scoring rubric (1–5 scale)
-│           ├── sdd-template.md          # Canonical SDD template for gap analysis
-│           └── gdocs-integration.md     # Google Docs MCP usage guide
+│           └── sdd-template.md          # Canonical SDD template for gap analysis
 └── rules/
     └── evaluation-guardrails.md         # Behavioral guardrails for objective evaluation
 ```

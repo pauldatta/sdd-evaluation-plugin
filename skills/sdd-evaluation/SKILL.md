@@ -7,8 +7,7 @@ description: >-
   review, when judging hackathon design documents, or when a team wants to
   self-assess their design before implementation. Also use when asked to review,
   score, grade, or evaluate any design document, technical spec, or architecture
-  proposal. Accepts Google Docs URLs, local Markdown/text files, or pasted
-  content as input.
+  proposal. Accepts local Markdown/text files or pasted content as input.
 ---
 
 # SDD Evaluation
@@ -25,13 +24,11 @@ Users can trigger this skill by:
 
 | Input Type | Example | How to Read |
 |---|---|---|
-| Google Docs URL | `https://docs.google.com/document/d/1a2b3c/edit` | `docs.getText({ documentId: "<url>" })` — see `references/gdocs-integration.md` |
-| Google Doc name | "the Project Alpha design doc" | `drive.search` → `docs.getText` — see `references/gdocs-integration.md` |
 | Local file path | `docs/sdd.md` or `./design.md` | Read the file from the workspace |
 | Pasted content | (user pastes the full document) | Use the pasted text directly |
 
 If the user says "evaluate my SDD" without providing a source, ask:
-> "Where is your SDD? You can share a Google Docs link, a file path in your repo, or paste the content directly."
+> "Where is your SDD? Share a file path in your repo or paste the content directly."
 
 ## Overview
 
@@ -68,16 +65,14 @@ document     context        missing             dimension        the final
 
 Get the full document content before anything else.
 
-1. **Determine the source.** Check what the user provided — a Google Docs URL, a document name to search, a local file path, or pasted text.
+1. **Determine the source.** Check what the user provided — a local file path or pasted text.
 2. **Read the document.**
-   - **Google Docs:** Use the Google Workspace MCP tools. See `references/gdocs-integration.md` for the exact workflow (URL handling, search, multi-tab docs). All workspace tools accept URLs directly — do not manually extract document IDs.
-   - **Local Markdown:** Read the file from the workspace. Parse `mermaid` fenced code blocks as architecture diagrams. Resolve `![alt](path)` image references and view images when possible.
+   - **Local file:** Read the file from the workspace. Parse `mermaid` fenced code blocks as architecture diagrams. Resolve `![alt](path)` image references and view images when possible.
    - **Pasted content:** Use it directly.
 3. **Handle images and diagrams.**
    - **Mermaid code blocks** in Markdown count as architecture diagrams. Evaluate their content for Dimension 2 (Architecture & Design) and Dimension 6 (Clarity & Communication).
-   - **Embedded images in Google Docs** can't be extracted as binary via `docs.getText`. Note their presence from context, credit the author for including visual aids, and ask the user to describe critical diagrams if their content is ambiguous.
    - **Inline images in Markdown** (`![diagram](path)`) — resolve and view the image file. Factor it into the architecture and clarity scores.
-4. **Verify completeness.** Confirm you have the full document — not a summary, partial draft, or truncated paste. If the document is split across multiple files or tabs, gather all parts.
+4. **Verify completeness.** Confirm you have the full document — not a summary, partial draft, or truncated paste. If the document is split across multiple files, gather all parts.
 
 ### Phase 1: Intake
 
@@ -91,7 +86,7 @@ Establish context before evaluating.
 ```
 INTAKE SUMMARY:
 - Document: [title/filename]
-- Source: [Google Docs / local file / pasted]
+- Source: [local file / pasted]
 - Context: [hackathon / production / PoC / migration]
 - Audience: [implementing team / reviewers / leadership]
 - Diagrams found: [yes — N diagrams / no]
@@ -145,7 +140,7 @@ Produce the final evaluation as a JSON object matching this structure:
 ```json
 {
   "summary": "2-3 sentence overall assessment",
-  "source": "Google Docs URL / local file path / pasted content",
+  "source": "local file path / pasted content",
   "context": "hackathon / production / PoC",
   "dimensions": [
     {

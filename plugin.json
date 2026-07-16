@@ -1,5 +1,5 @@
 {
   "name": "sdd-evaluation",
-  "description": "Evaluates Software Design Documents (SDDs) from Google Docs or local Markdown files against a 6-dimension rubric with scored verdicts. Cross-platform: works with Antigravity, Gemini CLI, and Claude Code.",
+  "description": "Evaluates Software Design Documents (SDDs) from local Markdown files or pasted content against a 6-dimension rubric with scored verdicts. Cross-platform: works with Antigravity, Gemini CLI, and Claude Code.",
   "version": "2.0.0"
 }
