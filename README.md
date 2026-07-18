@@ -171,8 +171,6 @@ Drop additional `.md` files into `rules/` to add behavioral constraints. For exa
 
 ---
 
-## License & Ownership
-
-Created by Paul Datta.
+## License
 
 Free for all hackathon participants, solution architects, and engineering teams for self-assessing design documents before implementation.
