@@ -1,10 +1,10 @@
 ---
-name: eval-guide
+name: agent-eval-guide
 description: >-
   Guides participants through assessing any Business Requirements Document (BRD) and designing a comprehensive AI Agent evaluation report (Section 1: Evaluation Approach & Design; Section 2: Execution Results Output & Diagnostics) using benchmark methodologies, metric selection rules, and test diagnostic frameworks.
 ---
 
-# Agent Evaluation Design & Report Authoring Skill (`eval-guide`)
+# Agent Evaluation Design & Report Authoring Skill (`agent-eval-guide`)
 
 ## Overview
 
