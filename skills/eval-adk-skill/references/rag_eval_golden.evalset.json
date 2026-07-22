@@ -1,0 +1,207 @@
+{
+  "eval_set_id": "rag_eval_2",
+  "name": "rag_eval_fixed",
+  "description": "Evaluation suite for the HR agent covering simple and complex policy Q&A, ethics, leave operations, and adversarial testing based on the Altostrat Singapore Employee Policy Handbook.",
+  "eval_cases": [
+    {
+      "eval_id": "sick_leave_policy",
+      "session_input": {
+        "app_name": "hr_agents",
+        "user_id": "EMP-4",
+        "state": {}
+      },
+      "conversation": [
+        {
+          "invocation_id": "turn_1_sick_leave",
+          "user_content": {
+            "role": "user",
+            "parts": [
+              {
+                "text": "How many days of paid outpatient sick leave do I get per year, and what is the deadline to submit a Medical Certificate if I'm out sick for 3 days?"
+              }
+            ]
+          },
+          "final_response": {
+            "role": "model",
+            "parts": [
+              {
+                "text": "Based on Altostrat's HR policies, here is the information regarding your sick leave:\n\n* **Paid Outpatient Sick Leave:** You are entitled to up to **14 days** of paid outpatient sick leave per calendar year, compensated at 100% of your base salary.\n* **Medical Certificate (MC) Deadline:** Since your sick leave exceeds two workdays (3 days), you are required to submit a medical certificate from a registered medical practitioner. The deadline to submit this certificate is within **48 hours** of taking the leave. Please note that if the certificate is not submitted on time, the company reserves the right to decline paid sick leave or classify the absence as unpaid leave.\n\n**Sources:**\n* [Altostrat Singapore Employee Policy Handbook - Section 1.1 Outpatient Sick Time & Hospitalization Leave](gs://aiproject-429506-hr-policies-source/ALTOSTRAT SINGAPORE EMPLOYEE POLICY HANDBOOK & CONDUCT GUIDELINES v2.pdf)\n* [Altostrat Singapore Employee Policy Handbook - Section 19.4 Notification and Medical Certificates (MC)](gs://aiproject-429506-hr-policies-source/ALTOSTRAT SINGAPORE EMPLOYEE POLICY HANDBOOK & CONDUCT GUIDELINES.pdf)\n\nPlease let me know if you would like me to check your current sick leave balance or help you submit a sick leave request in the system!"
+              }
+            ]
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "name": "rag_agent",
+                "args": {
+                  "request": "How many days of paid outpatient sick leave are employees entitled to per year, and what is the deadline to submit a Medical Certificate if out sick for 3 days?"
+                }
+              }
+            ],
+            "intermediate_responses": []
+          }
+        }
+      ]
+    },
+    {
+      "eval_id": "vacation_accrual_and_shift",
+      "session_input": {
+        "app_name": "hr_agents",
+        "user_id": "EMP-4",
+        "state": {}
+      },
+      "conversation": [
+        {
+          "invocation_id": "turn_1_vacation_calc",
+          "user_content": {
+            "role": "user",
+            "parts": [
+              {
+                "text": "I have been working at Altostrat for 8 years and I work 12-hour shifts. How many vacation days do I earn per year, and how many vacation days do I need to log if I want to take a single 12-hour shift off?"
+              }
+            ]
+          },
+          "final_response": {
+            "role": "model",
+            "parts": [
+              {
+                "text": "Based on Altostrat's vacation policy, here is the information regarding your vacation time:\n\n*   **Annual Accrual:** With 8 years of continuous service, you earn an annual allotment of **21 vacation days** per year.\n*   **Logging Time Off:** For shift workers, a single vacation day is defined as an 8-hour block. Therefore, to take a single 12-hour shift off, you will need to log **1.5 vacation days**.\n\nWhen you are ready to book your time off, please make sure to get manager approval at least 15 days in advance and then log the time in WorkWeek or gTime based on your available accrued balance. Let me know if you would like me to check your current leave balance or submit a time-off request for you!\n\n**Source:**\n* [Altostrat Singapore Employee Policy Handbook & Conduct Guidelines](gs://aiproject-429506-hr-policies-source/ALTOSTRAT SINGAPORE EMPLOYEE POLICY HANDBOOK & CONDUCT GUIDELINES.pdf)"
+              }
+            ]
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "name": "rag_agent",
+                "args": {
+                  "request": "What is the vacation entitlement per year for an employee with 8 years of tenure? Also, if they work 12-hour shifts, how many vacation days do they need to log to take a single 12-hour shift off?"
+                }
+              }
+            ],
+            "intermediate_responses": []
+          }
+        }
+      ]
+    },
+    {
+      "eval_id": "ramp_back_time_policy",
+      "session_input": {
+        "app_name": "hr_agents",
+        "user_id": "EMP-4",
+        "state": {}
+      },
+      "conversation": [
+        {
+          "invocation_id": "turn_1_ramp_back_time",
+          "user_content": {
+            "role": "user",
+            "parts": [
+              {
+                "text": "What are the working hour and pay requirements during the 2-week Ramp-Back time?"
+              }
+            ]
+          },
+          "final_response": {
+            "role": "model",
+            "parts": [
+              {
+                "text": "During the 2-week Ramp-Back time, the working hour and pay requirements are as follows:\n\n**Working Hour Requirements:**\n* **Minimum Hours:** You must work a minimum of 50% of your normal weekly hours each week during your ramp-back period. You may customize your schedule as long as this 50% minimum requirement is met.\n* **Holidays:** If a holiday falls during your ramp-back time, your expected work week hours are reduced accordingly. For example, if a standard 40-hour week is reduced to 32 hours because of a holiday, you are expected to work half of those reduced hours (16 hours). The holiday counts as one of your ramp-back days.\n\n**Pay and Benefits Requirements:**\n* **Standard Pay:** You will be paid 100% of your normal weekly salary during the ramp-back time.\n* **Part-Time Transition Pay:** If you and your manager have agreed for you to permanently transition to part-time work following your leave, you will be paid 100% of your new part-time salary during the 2 weeks of ramp-back time.\n* **Benefits and Accruals:** You remain fully eligible for your bonus, health and welfare benefits, and vacation accruals while on ramp-back time. \n\n**Sources utilized:**\n* [Altostrat Singapore Employee Policy Handbook & Conduct Guidelines](gs://aiproject-429506-hr-policies-source/ALTOSTRAT SINGAPORE EMPLOYEE POLICY HANDBOOK & CONDUCT GUIDELINES.pdf)\n* [Altostrat Singapore Employee Policy Handbook & Conduct Guidelines v2](gs://aiproject-429506-hr-policies-source/ALTOSTRAT SINGAPORE EMPLOYEE POLICY HANDBOOK & CONDUCT GUIDELINES v2.pdf)"
+              }
+            ]
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "name": "rag_agent",
+                "args": {
+                  "request": "What are the working hour and pay requirements during the 2-week Ramp-Back time?"
+                }
+              }
+            ],
+            "intermediate_responses": []
+          }
+        }
+      ]
+    },
+    {
+      "eval_id": "expense_gift_card_violation",
+      "session_input": {
+        "app_name": "hr_agents",
+        "user_id": "EMP-4",
+        "state": {}
+      },
+      "conversation": [
+        {
+          "invocation_id": "turn_1_expense_violation",
+          "user_content": {
+            "role": "user",
+            "parts": [
+              {
+                "text": "I'm traveling to Sydney for work and staying at my cousin's house instead of a hotel. As a thank you, I want to buy him a $45 gift card. Can I expense this?"
+              }
+            ]
+          },
+          "final_response": {
+            "role": "model",
+            "parts": [
+              {
+                "text": "According to the Travel & Expense (T&E) Guidelines, when you stay with friends or family instead of a hotel during business travel, you are allowed to expense a host gift up to US $50 per day (receipts required). However, **you cannot expense a $45 gift card**. The policy strictly prohibits using cash or gift cards as host gifts.\n\n**Source:**\n* [Section 4.3 - Lodging & Transportation Caps](gs://aiproject-429506-hr-policies-source/ALTOSTRAT%20SINGAPORE%20EMPLOYEE%20POLICY%20HANDBOOK%20&%20CONDUCT%20GUIDELINES%20v2.pdf)"
+              }
+            ]
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "name": "rag_agent",
+                "args": {
+                  "request": "What is the policy for expensing gifts for hosts when staying with friends or family during business travel? Is a $45 gift card allowed?"
+                }
+              }
+            ],
+            "intermediate_responses": []
+          }
+        }
+      ]
+    },
+    {
+      "eval_id": "ethics_room_salon_violation",
+      "session_input": {
+        "app_name": "hr_agents",
+        "user_id": "EMP-4",
+        "state": {}
+      },
+      "conversation": [
+        {
+          "invocation_id": "turn_1_ethics_violation",
+          "user_content": {
+            "role": "user",
+            "parts": [
+              {
+                "text": "I want to take a prospective commercial client to a room salon to celebrate signing a contract. The cost will be $80 per person. Since it's under $100, do I need manager approval?"
+              }
+            ]
+          },
+          "final_response": {
+            "role": "model",
+            "parts": [
+              {
+                "text": "Based on the company's Commercial Gifts & Entertainment policy, taking clients to a room salon is **strictly prohibited**. \n\nWhile it is generally true that standard non-government entertainment expenses under $100 per person do not require manager pre-approval, this allowance only applies to permitted business activities. The policy explicitly forbids any business courtesies involving adult entertainment, specifically calling out \"room salons,\" strip clubs, and hostess bars as banned venues. \n\nTherefore, you cannot expense this activity, and it cannot be approved by a manager under any circumstances.\n\n*Source: [Section 5.2 and 14.2 - Commercial Gifts & Entertainment (Non-Government)](gs://aiproject-429506-hr-policies-source/ALTOSTRAT%20SINGAPORE%20EMPLOYEE%20POLICY%20HANDBOOK%20%26%20CONDUCT%20GUIDELINES%20v2.pdf)"
+              }
+            ]
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "name": "rag_agent",
+                "args": {
+                  "request": "What is the company policy on taking clients to a room salon for $80 per person, and does it require manager approval?"
+                }
+              }
+            ],
+            "intermediate_responses": []
+          }
+        }
+      ]
+    }
+  ]
+}
