@@ -1,6 +1,6 @@
 # Module 3: Evaluation Plugins & Skills
 
-This repository is a curated collection of evaluation skills and plugins designed for **Module 3** (AI Agent & Technical Spec Evaluation). It provides AI agents and developers with standardized rubrics, step-by-step evaluation workflows, guardrails, and templates to assess Software Design Documents (SDDs) and design comprehensive AI agent evaluation suites.
+This repository is a curated collection of evaluation skills and plugins designed for **Module 3** (AI Agent & Technical Spec Evaluation). It provides AI agents and developers with standardized rubrics, step-by-step evaluation workflows, guardrails, and templates to assess Software Design Documents (SDDs), measure architecture drift, generate 4-tier golden datasets, and run comprehensive AI agent evaluation suites.
 
 These skills are compatible across multi-agent environments including **Antigravity**, **Gemini CLI**, **Claude Code**, and Jetski.
 
@@ -12,12 +12,15 @@ These skills are compatible across multi-agent environments including **Antigrav
 
 ```
 evaluation-plugins/
-├── plugin.json                 # Plugin manifest and metadata
-├── rules/                      # System rules and skill guardrails
-│   └── sdd-evaluation-guardrails.md # Behavioral guardrails for SDD evaluation
-├── skills/                     # Modular skills directory (extensible)
-│   ├── agent-eval-guide/       # AI Agent Evaluation Design & Report Authoring Skill
-│   └── sdd-evaluation/         # Software Design Document Evaluation Skill
+├── plugin.json                          # Plugin manifest and metadata
+├── rules/                               # System rules and skill guardrails
+│   └── sdd-evaluation-guardrails.md      # Behavioral guardrails for SDD evaluation
+├── skills/                              # Modular skills directory (extensible)
+│   ├── agent-eval-guide/                # AI Agent Evaluation Design & Report Authoring Skill
+│   ├── architecture-drift-evaluation/  # Code vs SDD Architecture Drift Evaluation Skill
+│   ├── eval-adk-skill/                  # 4-Tier Golden Evalset Engineering & Evaluation for Google ADK
+│   ├── eval-agentcli-skill/             # ADK Agent Evaluation Runner & Preflight Check Skill
+│   └── sdd-evaluation/                  # Software Design Document Evaluation Skill
 └── README.md
 ```
 
@@ -36,7 +39,23 @@ evaluation-plugins/
   - Reference the instructions in [`skills/agent-eval-guide/SKILL.md`](skills/agent-eval-guide/SKILL.md).
   - Follow structural guidelines in [`skills/agent-eval-guide/references/report_template.md`](skills/agent-eval-guide/references/report_template.md) and [`skills/agent-eval-guide/references/approach_guide.md`](skills/agent-eval-guide/references/approach_guide.md).
 
-### 2. `sdd-evaluation` — Software Design Document Evaluation
+### 2. `architecture-drift-evaluation` — Architecture Drift Evaluation
+- **Location:** `skills/architecture-drift-evaluation/`
+- **Description:** Evaluates a code repository against its Software Design Document (SDD) and BRD context to measure **Architecture Drift** — the delta between proposed architecture and actual implementation.
+- **Key Features:** Audits component topology, design patterns, API & data contracts, deployment scripts, evaluation assets, and operational readiness.
+- **How to Use:** Reference the instructions in [`skills/architecture-drift-evaluation/SKILL.md`](skills/architecture-drift-evaluation/SKILL.md).
+
+### 3. `eval-adk-skill` — ADK 4-Tier Golden Evalset & MAS Evaluation
+- **Location:** `skills/eval-adk-skill/`
+- **Description:** Scaffolds, validates, and executes 4-Tier Stratified golden evaluation datasets (`*.evalset.json`), test configs (`eval_config.json`), and evaluation reports for Single-Agent and Multi-Agent Systems built on Google ADK.
+- **How to Use:** Reference the instructions in [`skills/eval-adk-skill/SKILL.md`](skills/eval-adk-skill/SKILL.md).
+
+### 4. `eval-agentcli-skill` — ADK Agent CLI Evaluation Runner
+- **Location:** `skills/eval-agentcli-skill/`
+- **Description:** Orchestrates preflight environment checks and executes Google Agents CLI (`google-agents-cli eval run`) to evaluate ADK agents.
+- **How to Use:** Reference the instructions in [`skills/eval-agentcli-skill/SKILL.md`](skills/eval-agentcli-skill/SKILL.md).
+
+### 5. `sdd-evaluation` — Software Design Document Evaluation
 - **Location:** `skills/sdd-evaluation/`
 - **Description:** Evaluates Software Design Documents (SDDs) across 6 weighted dimensions to produce scored verdicts, evidence citations, gap analyses, and actionable improvement recommendations.
 - **Evaluation Dimensions:**
