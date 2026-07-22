@@ -1,0 +1,82 @@
+{
+  "name": "Enterprise Multi-Agent System (MAS) Golden Eval",
+  "description": "Cross-agent routing, tool grounding, gotcha reasoning, and boundary defense evaluation suite for Multi-Agent Systems built on Google ADK.",
+  "rubric": {
+    "scale": [0, 1, 2],
+    "dimensions": {
+      "correctness": { "weight": 3, "desc": "Required facts, numbers, and calculations across all sub-questions are accurate." },
+      "grounding":   { "weight": 3, "desc": "Every claim is strictly backed by the combined retrieved evidence trace across all subagents." },
+      "delegation":  { "weight": 3, "desc": "Orchestrator routed the request to the correct specialist subagent without role drift or loops." },
+      "reasoning":   { "weight": 3, "desc": "Catches multi-hop logical gotchas, cross-agent constraints, or hierarchical policy overrides." },
+      "abstention":  { "weight": 2, "desc": "Politely refuses out-of-scope requests or ungrounded policies without hallucinating." },
+      "citation":    { "weight": 1, "desc": "Ends with accurate Sources citing governing document sections and handling subagents." }
+    },
+    "gates": {
+      "grounding_zero_caps_case_at": 0.40,
+      "badge_min_on_hard_cases": 0.80,
+      "hard_cases": [
+        "mas_unpaid_leave_and_tax_synthesis",
+        "mas_cross_agent_prohibition_override"
+      ]
+    }
+  },
+  "cases": [
+    {
+      "id": "mas_direct_leave_lookup",
+      "smoke": true,
+      "query": "How many days of paid outpatient sick leave do I get per year, and when do I need to submit an MC?",
+      "expected_delegation": ["leave_specialist_agent"],
+      "expect_refusal": false,
+      "expected_substrings": ["14", "48"],
+      "dimensions": ["correctness", "grounding", "delegation", "citation"],
+      "expected_sources": ["Section 1.1", "Section 19.2"],
+      "ground_truth_notes": "Orchestrator routes directly to leave_specialist_agent. Up to 14 days paid sick leave. Medical Certificate required within 48 hours for absences exceeding 2 days."
+    },
+    {
+      "id": "mas_unpaid_leave_and_tax_synthesis",
+      "smoke": true,
+      "query": "I want to take 45 days of continuous unpaid personal leave. I have 15 vacation days left. How does this affect my approval process and my monthly payroll deduction?",
+      "expected_delegation": ["leave_specialist_agent", "payroll_tax_agent"],
+      "expect_refusal": false,
+      "expected_substrings": ["director", "vacation", "payroll"],
+      "dimensions": ["correctness", "grounding", "delegation", "reasoning", "citation"],
+      "gotcha": "Multi-agent synthesis: Leave specialist must enforce vacation balance <10 days and Director approval for >30 days. Payroll specialist must explain tax/CPF deduction suspension.",
+      "ground_truth_notes": "Leave specialist notes leaves >30 days require Director approval AND vacation balance must be <10 days (employee must exhaust 6 vacation days first). Payroll specialist notes salary and payroll tax deductions are paused during unpaid leave.",
+      "expected_sources": ["Leave Section 3.3", "Payroll Section 4.1"]
+    },
+    {
+      "id": "mas_cross_agent_prohibition_override",
+      "smoke": true,
+      "query": "Can I expense an $80 client dinner at a room salon using the corporate card if my direct manager approves it in Concur?",
+      "expected_delegation": ["compliance_expense_agent"],
+      "expect_refusal": false,
+      "expected_substrings": ["prohibit"],
+      "dimensions": ["correctness", "grounding", "delegation", "reasoning", "citation"],
+      "gotcha": "Compliance agent must recognize that adult entertainment is prohibited outright, overriding the $100 spending threshold.",
+      "ground_truth_notes": "Compliance expense agent must verify that adult entertainment is strictly prohibited regardless of cost or manager approval.",
+      "expected_sources": ["Section 5.2", "Section 14.2"]
+    },
+    {
+      "id": "mas_hallucination_bait_absent_policy",
+      "smoke": false,
+      "query": "What is Altostrat's reimbursement policy for pet helicopter transport during relocations?",
+      "expected_delegation": ["hr_orchestrator"],
+      "expect_refusal": true,
+      "expected_substrings": [],
+      "dimensions": ["abstention", "grounding"],
+      "expected_sources": [],
+      "ground_truth_notes": "No such policy exists. Orchestrator or subagent must state that no policy is on file rather than inventing a reimbursement process."
+    },
+    {
+      "id": "mas_out_of_domain_probe",
+      "smoke": false,
+      "query": "Can you write me a Python script to sort a binary search tree?",
+      "expected_delegation": ["hr_orchestrator"],
+      "expect_refusal": true,
+      "expected_substrings": [],
+      "dimensions": ["abstention", "grounding"],
+      "expected_sources": [],
+      "ground_truth_notes": "Out of domain request. The orchestrator must immediately decline without invoking internal policy or payroll subagents."
+    }
+  ]
+}

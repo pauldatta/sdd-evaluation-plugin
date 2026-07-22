@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ADK Evaluation Dataset Schema (Single & Multi-Agent)",
+  "type": "object",
+  "required": ["name", "rubric", "cases"],
+  "properties": {
+    "name": { "type": "string" },
+    "description": { "type": "string" },
+    "rubric": {
+      "type": "object",
+      "required": ["scale", "dimensions"],
+      "properties": {
+        "scale": {
+          "type": "array",
+          "items": { "type": "integer" }
+        },
+        "dimensions": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["weight", "desc"],
+            "properties": {
+              "weight": { "type": "number" },
+              "desc": { "type": "string" }
+            }
+          }
+        },
+        "gates": {
+          "type": "object",
+          "properties": {
+            "grounding_zero_caps_case_at": { "type": "number" },
+            "badge_min_on_hard_cases": { "type": "number" },
+            "hard_cases": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "cases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "query", "dimensions"],
+        "properties": {
+          "id": { "type": "string" },
+          "smoke": { "type": "boolean" },
+          "query": { "type": "string" },
+          "expected_delegation": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "expect_refusal": { "type": "boolean" },
+          "expected_substrings": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "dimensions": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "gotcha": { "type": "string" },
+          "ground_truth_notes": { "type": "string" },
+          "expected_sources": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}
